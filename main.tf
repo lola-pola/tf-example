@@ -114,7 +114,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 
 resource "azurerm_kubernetes_cluster_node_pool" "analyzer" {
-  name = substr("${var.customer_name}-analyzer", 0, min(12, length("${var.customer_name}-analyzer")))
+  name = substr("${var.customer_name}analyzer", 0, min(12, length("${var.customer_name}-analyzer")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   min_count             = var.min_count_user
@@ -126,7 +126,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "analyzer" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
-  name = substr("${var.customer_name}-clickhouse", 0, min(12, length("${var.customer_name}-clickhouse")))
+  name = substr("${var.customer_name}clickhouse", 0, min(12, length("${var.customer_name}-clickhouse")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   min_count             = var.min_count_user
@@ -163,7 +163,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "ec" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
-  name = substr("${var.customer_name}-kafka", 0, min(12, length("${var.customer_name}-kafka")))
+  name = substr("${var.customer_name}kafka", 0, min(12, length("${var.customer_name}-kafka")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   min_count             = var.min_count_user
@@ -175,7 +175,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "management" {
-  name = substr("${var.customer_name}-management", 0, min(12, length("${var.customer_name}-management")))
+  name = substr("${var.customer_name}management", 0, min(12, length("${var.customer_name}-management")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   min_count             = var.min_count_user
@@ -188,7 +188,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "management" {
 
 
 resource "azurerm_kubernetes_cluster_node_pool" "pg" {
-  name = substr("${var.customer_name}-pg", 0, min(12, length("${var.customer_name}-pg")))
+  name = substr("${var.customer_name}pg", 0, min(12, length("${var.customer_name}-pg")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   min_count             = var.min_count_user
@@ -200,7 +200,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "pg" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "site" {
-  name = substr("${var.customer_name}-site", 0, min(12, length("${var.customer_name}-site")))
+  name = substr("${var.customer_name}site", 0, min(12, length("${var.customer_name}-site")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   min_count             = var.min_count_user
