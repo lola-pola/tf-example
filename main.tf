@@ -62,8 +62,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = azurerm_resource_group.rg.name
   kubernetes_version  = var.kubernetes_version
   automatic_channel_upgrade = var.automatic_channel_upgrade 
+  http_application_routing_enabled = var.http_application_routing_enabled 
 
-
+  storage_profile {
+    blob_driver_enabled = true
+    disk_driver_enabled = true
+    file_driver_enabled = true
+    snapshot_controller_enabled = true
+  }
 
   network_profile {
     network_plugin = "azure"
@@ -115,6 +121,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
   vm_size               = var.vm_size_user
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "cs" {

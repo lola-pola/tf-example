@@ -1,7 +1,7 @@
 
 variable "customer_name" {
   type    = string
-  default = "gltest"
+  default = "wf"
 }
 
 variable "address_space" {
@@ -72,7 +72,9 @@ variable "system_max_count" {
 variable "vm_size" {
   default = "Standard_D2_v2"
 }
-
+variable "http_application_routing_enabled" {
+  default = true
+}
 
 # tags map
 variable "tags_map" {
