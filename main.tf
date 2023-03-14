@@ -76,10 +76,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   automatic_channel_upgrade = var.automatic_channel_upgrade 
   http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
-    attached_acr_id_map = {
-    acr = azurerm_container_registry.acr.id
-  }
-
+  node_resource_group = azurerm_resource_group.rg.name
   storage_profile {
     blob_driver_enabled = true
     disk_driver_enabled = true
