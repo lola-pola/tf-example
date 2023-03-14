@@ -54,17 +54,17 @@ resource "azurerm_subnet" "subnet_address_site" {
 
 }
 
-resource "azurerm_container_registry" "acr" {
-  name                = "containerRegistry1"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.resource_group_location
-  sku                 = "Premium"
-  admin_enabled       = false
-   retention_policy {
-    days    = 10
-    enabled = true
-  }
-}
+# resource "azurerm_container_registry" "acr" {
+#   name                = "containerRegistry1"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   location            = var.resource_group_location
+#   sku                 = "Premium"
+#   admin_enabled       = false
+#    retention_policy {
+#     days    = 10
+#     enabled = true
+#   }
+# }
 
 
 resource "azurerm_kubernetes_cluster" "aks" {
