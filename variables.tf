@@ -107,7 +107,7 @@ variable "enable_auto_scaling" {
 }
 
 variable "sku_tier" {
-  default = "Standard"
+  default = "Paid"
 }
 # tags map
 variable "tags_map_user" {
