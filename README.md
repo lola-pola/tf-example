@@ -1,6 +1,5 @@
 # Terraform AKS Cluster with Multiple Node Pools
 
-terraform graph | mermade | dot -Tpng > terraform.png
  
 This Terraform code provisions an AKS cluster with multiple node pools and configures its network profile, default node pool, and node pools for analyzer, clickhouse, and cs. It also provisions a virtual network with multiple subnets.
 
