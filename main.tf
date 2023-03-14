@@ -54,6 +54,18 @@ resource "azurerm_subnet" "subnet_address_site" {
 
 }
 
+resource "azurerm_container_registry" "acr" {
+  name                = "containerRegistry1"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.resource_group_location
+  sku                 = "Premium"
+  admin_enabled       = false
+   retention_policy {
+    days    = 10
+    enabled = true
+  }
+}
+
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.customer_name
@@ -63,6 +75,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   kubernetes_version  = var.kubernetes_version
   automatic_channel_upgrade = var.automatic_channel_upgrade 
   http_application_routing_enabled = var.http_application_routing_enabled 
+  sku_tier = var.sku_tier
+    attached_acr_id_map = {
+    acr = azurerm_container_registry.acr.id
+  }
 
   storage_profile {
     blob_driver_enabled = true
@@ -76,6 +92,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin_mode = "Overlay"
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
+    
   }
     
 
