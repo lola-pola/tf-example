@@ -76,7 +76,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   automatic_channel_upgrade = var.automatic_channel_upgrade 
   http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
-  node_resource_group = azurerm_resource_group.rg.name
+  node_resource_group = "${var.node_resource_group}-${var.customer_name}"
   storage_profile {
     blob_driver_enabled = true
     disk_driver_enabled = true
@@ -139,7 +139,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "cs" {
-  name = substr("${var.customer_name}-cs", 0, min(12, length("${var.customer_name}-cs")))
+  name = substr("${var.customer_name}cs", 0, min(12, length("${var.customer_name}-cs")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   min_count             = var.min_count_user

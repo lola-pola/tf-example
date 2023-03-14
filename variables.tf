@@ -3,6 +3,12 @@ variable "customer_name" {
   type    = string
   default = "wf"
 }
+variable "node_resource_group" {
+  type    = string
+  default = "nodes-rs"
+}
+
+
 
 variable "address_space" {
   type    = string
