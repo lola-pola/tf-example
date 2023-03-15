@@ -10,6 +10,13 @@ variable "node_resource_group" {
 
 
 
+variable "resource_group_location" {
+  default     = "West Europe"
+  type = string
+  description = "Location of the resource group."
+}
+
+
 variable "address_space" {
   type    = string
   default = "11.0.0.0/22"
@@ -41,13 +48,6 @@ variable "subnet_address_site_prefix" {
 }
 
 
-
-
-variable "resource_group_location" {
-  default     = "West Europe"
-  type = string
-  description = "Location of the resource group."
-}
 
 variable "kubernetes_version" {
   default = "1.25.4"

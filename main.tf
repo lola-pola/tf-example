@@ -54,19 +54,24 @@ resource "azurerm_subnet" "subnet_address_site" {
 
 }
 
-# resource "azurerm_container_registry" "acr" {
-#   name                = "containerRegistry1"
-#   resource_group_name = azurerm_resource_group.rg.name
-#   location            = var.resource_group_location
-#   sku                 = "Premium"
-#   admin_enabled       = false
-#    retention_policy {
-#     days    = 10
-#     enabled = true
-#   }
-# }
+resource "azurerm_container_registry" "acr" {
+  name                = "${var.customer_name}acr"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.resource_group_location
+  sku                 = "Premium"
+  admin_enabled       = false
+   retention_policy {
+    days    = 10
+    enabled = true
+  }
+}
 
-
+# add the role to the identity the kubernetes cluster was assigned
+resource "azurerm_role_assignment" "kubweb_to_acr" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+}
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.customer_name
   dns_prefix          = var.customer_name
@@ -77,6 +82,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
   node_resource_group = "${var.node_resource_group}-${var.customer_name}"
+  
+  # api_server_access_profile{
+  #   enable_private_cluster = var.enable_private_cluster
+  #   private_dns_zone_name = var.private_dns_zone_name
+  #   private_dns_zone_resource_group_name = var.private_dns_zone_resource_group_name
+  # }
+  
   storage_profile {
     blob_driver_enabled = true
     disk_driver_enabled = true
