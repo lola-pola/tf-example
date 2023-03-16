@@ -27,12 +27,12 @@ variable "subnet_address_ep_prefix" {
 
 variable "subnet_address_nat_prefix" {
   type    = string
-  default = "nat 11.0.1.128/25"
+  default = "11.0.1.128/25"
 }
 
 variable "subnet_address_public_prefix" {
   type    = string
-  default = "public 11.0.2.0/27"
+  default = "11.0.2.0/27"
 }
 
 variable "subnet_address_site_prefix" {
