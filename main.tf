@@ -84,7 +84,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
   node_resource_group = "${var.node_resource_group}-${var.customer_name}"
-  workload_identity_enabled = true
 
 
   # api_server_access_profile{
