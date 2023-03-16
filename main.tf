@@ -86,7 +86,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   node_resource_group = "${var.node_resource_group}-${var.customer_name}"
   workload_identity_enabled = true
 
-  
+
   # api_server_access_profile{
   #   enable_private_cluster = var.enable_private_cluster
   #   private_dns_zone_name = var.private_dns_zone_name
@@ -296,7 +296,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
 
 
 resource "azurerm_kubernetes_cluster_node_pool" "aks-ep" {
-  name = substr("${var.customer_name}ep", 0, min(12, length("${var.customer_name}ep")))
+  name = substr("${var.customer_name}gateway", 0, min(12, length("${var.customer_name}gateway")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks-ep.id
   min_count             = var.min_count_site
