@@ -8,8 +8,6 @@ variable "node_resource_group" {
   default = "nodes-rs"
 }
 
-
-
 variable "resource_group_location" {
   default     = "West Europe"
   type = string
@@ -34,12 +32,12 @@ variable "subnet_address_ep_prefix" {
 
 variable "subnet_address_nat_prefix" {
   type    = string
-  default = "11.0.1.128/25"
+  default = "nat 11.0.1.128/25"
 }
 
 variable "subnet_address_public_prefix" {
   type    = string
-  default = "11.0.2.0/27"
+  default = "public 11.0.2.0/27"
 }
 
 variable "subnet_address_site_prefix" {

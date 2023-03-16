@@ -79,3 +79,6 @@ Azure CNI Overlay is a more advanced networking solution that provides more flex
 Both Kubenet and Azure CNI Overlay have their advantages and disadvantages. If you need a simple, basic solution for a small cluster, Kubenet may be the way to go. However, if you need a more advanced and scalable networking solution with more features, Azure CNI Overlay is the better choice.
 
 For more information on Kubernetes networking, see the [official documentation](https://kubernetes.io/docs/concepts/cluster-administration/networking/).
+
+
+## Running with HA architecture
