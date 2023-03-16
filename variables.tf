@@ -1,24 +1,19 @@
 
 variable "customer_name" {
   type    = string
-  default = "wf"
+  default = "lolas"
 }
+
 variable "node_resource_group" {
   type    = string
   default = "nodes-rs"
 }
 
-variable "resource_group_location" {
-  default     = "West Europe"
-  type = string
-  description = "Location of the resource group."
-}
-
-
 variable "address_space" {
   type    = string
   default = "11.0.0.0/22"
 }
+
 
 variable "subnet_address_core_prefix" {
   type    = string
@@ -92,6 +87,12 @@ variable "tags_map" {
   }
 }
 
+variable "resource_group_location" {
+  default     = "West Europe"
+  type = string
+  description = "Location of the resource group."
+}
+
 variable "min_count_user" {
   default = 1
 }
@@ -128,3 +129,107 @@ variable "tags_map_user" {
 
 
 
+variable "min_count_analyzer" {
+  default = 1
+}
+
+variable "max_count_analyzer" {
+  default = 1
+}
+
+
+variable "min_count_clickhouse" {
+  default = 1
+}
+
+variable "max_count_clickhouse" {
+  default = 1
+}
+
+
+variable "min_count_cs" {
+  default = 1
+}
+
+variable "max_count_cs" {
+  default = 1
+}
+
+variable "min_count_ec" {
+  default = 1
+}
+
+variable "max_count_ec" {
+  default = 1
+}
+
+variable "min_count_kafka" {
+  default = 1
+}
+
+variable "max_count_kafka" {
+  default = 1
+}
+
+variable "min_count_pg" {
+  default = 1
+}
+
+variable "max_count_pg" {
+  default = 1
+}
+
+variable "min_count_management" {
+  default = 1
+}
+
+variable "max_count_management" {
+  default = 1
+}
+
+variable "min_count_site" {
+  default = 1
+}
+
+variable "max_count_site" {
+  default = 1
+}
+variable "vm_size_ep" {
+  default = "Standard_D2_v2"
+}
+
+
+variable "vm_size_site" {
+  default = "Standard_D2_v2"
+}
+
+variable "vm_size_pg" {
+  default = "Standard_D2_v2"
+}
+
+variable "vm_size_management" {
+  default = "Standard_D2_v2"
+}
+
+
+variable "vm_size_kafka" {
+  default = "Standard_D2_v2"
+}
+
+
+variable "vm_size_ec" {
+  default = "Standard_D2_v2"
+}
+
+variable "vm_size_cs" {
+  default = "Standard_D2_v2"
+}
+
+variable "vm_size_clickhouse" {
+  default = "Standard_D2_v2"
+}
+
+
+variable "vm_size_analyzer" {
+  default = "Standard_D2_v2"
+}
