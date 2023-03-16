@@ -271,7 +271,7 @@ output "kube_config" {
 resource "azurerm_kubernetes_cluster" "aks-ep" {
   name                = "${var.customer_name}-ep"
   dns_prefix          = var.customer_name
-  location            = var.resource_group_location
+  location            = "${var.resource_group_location}-ep"
   resource_group_name = azurerm_resource_group.rg.name
   kubernetes_version  = var.kubernetes_version
   automatic_channel_upgrade = var.automatic_channel_upgrade 
