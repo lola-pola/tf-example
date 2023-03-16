@@ -17,6 +17,7 @@ To use this Terraform code:
 8. Run `terraform apply` to apply the infrastructure changes.
 
 ## AKS Cluster
+![Diagram showing the architecture of the system](images/azure-cni-overlay.png)
 
 
 The AKS cluster is created with the provided parameters, such as the name, location, and Kubernetes version. The network profile is configured to use Azure CNI as the network plugin with the Overlay mode and Cilium as the eBPF dataplane. A pod CIDR of 192.168.0.0/16 is also configured.
