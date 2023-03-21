@@ -7,6 +7,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Create a virtual network within the resource group
 resource "azurerm_virtual_network" "vnet" {
+  depends_on = [azurerm_resource_group.rg]
   name                = "${var.customer_name}-vnet"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.resource_group_location
@@ -15,6 +16,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 
 resource "azurerm_subnet" "subnet_address_core" {
+  depends_on = [azurerm_virtual_network.vnet]
   name                 = "core"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
@@ -23,6 +25,7 @@ resource "azurerm_subnet" "subnet_address_core" {
 }
 
 resource "azurerm_subnet" "subnet_address_ep" {
+  depends_on = [azurerm_virtual_network.vnet]
   name                 = "ep"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
@@ -31,6 +34,7 @@ resource "azurerm_subnet" "subnet_address_ep" {
 }
 
 resource "azurerm_subnet" "subnet_address_nat" {
+  depends_on = [azurerm_virtual_network.vnet]
   name                 = "nat"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
@@ -39,6 +43,7 @@ resource "azurerm_subnet" "subnet_address_nat" {
 }
 
 resource "azurerm_subnet" "subnet_address_public" {
+  depends_on = [azurerm_virtual_network.vnet]
   name                 = "public"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
@@ -47,6 +52,7 @@ resource "azurerm_subnet" "subnet_address_public" {
 }
 
 resource "azurerm_subnet" "subnet_address_site" {
+  depends_on = [azurerm_virtual_network.vnet]
   name                 = "site"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
@@ -54,27 +60,9 @@ resource "azurerm_subnet" "subnet_address_site" {
 
 }
 
-## this is AKS 
-# resource "azurerm_container_registry" "acr" {
-#   name                = "${var.customer_name}acr"
-#   resource_group_name = azurerm_resource_group.rg.name
-#   location            = var.resource_group_location
-#   sku                 = "Premium"
-#   admin_enabled       = false
-#    retention_policy {
-#     days    = 10
-#     enabled = true
-#   }
-# }
-
-# # add the role to the identity the kubernetes cluster was assigned
-# resource "azurerm_role_assignment" "kubweb_to_acr" {
-#   scope                = azurerm_container_registry.acr.id
-#   role_definition_name = "AcrPull"
-#   principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-# }
 
 resource "azurerm_kubernetes_cluster" "aks" {
+  depends_on = [azurerm_virtual_network.vnet]
   name                = var.customer_name
   dns_prefix          = var.customer_name
   location            = var.resource_group_location
@@ -131,6 +119,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 
 resource "azurerm_kubernetes_cluster_node_pool" "analyzer" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}analyzer", 0, min(12, length("${var.customer_name}analyzer")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -143,6 +132,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "analyzer" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}clickhouse", 0, min(12, length("${var.customer_name}clickhouse")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -156,6 +146,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "cs" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}cs", 0, min(12, length("${var.customer_name}cs")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -168,6 +159,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "cs" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "ec" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}ec", 0, min(12, length("${var.customer_name}ec")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -180,6 +172,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "ec" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}kafka", 0, min(12, length("${var.customer_name}kafka")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -192,6 +185,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "management" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}management", 0, min(12, length("${var.customer_name}management")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -205,6 +199,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "management" {
 
 
 resource "azurerm_kubernetes_cluster_node_pool" "pg" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}pg", 0, min(12, length("${var.customer_name}pg")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -217,6 +212,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "pg" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "site" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   name = substr("${var.customer_name}site", 0, min(12, length("${var.customer_name}site")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
@@ -231,11 +227,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "site" {
 
 
 output "client_certificate" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   value     = azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate
   sensitive = true
 }
 
 output "kube_config" {
+  depends_on = [azurerm_kubernetes_cluster.aks]
   value = azurerm_kubernetes_cluster.aks.kube_config_raw
 
   sensitive = true
@@ -243,6 +241,7 @@ output "kube_config" {
 
 
 resource "azurerm_kubernetes_cluster" "aks-ep" {
+  depends_on = [azurerm_virtual_network.vnet]
   name                = "${var.customer_name}-ep"
   dns_prefix          = var.customer_name
   location            = var.resource_group_location
@@ -251,7 +250,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
   automatic_channel_upgrade = var.automatic_channel_upgrade 
   http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
-  node_resource_group = "${var.node_resource_group}-${var.customer_name}"
+  node_resource_group = "${var.node_resource_group}-${var.customer_name}-ep"
   
   # api_server_access_profile{
   #   enable_private_cluster = var.enable_private_cluster
@@ -294,7 +293,8 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
 
 
 
-resource "azurerm_kubernetes_cluster_node_pool" "aks-ep" {
+resource "azurerm_kubernetes_cluster_node_pool" "aks-ep-nodes" {
+  depends_on = [azurerm_kubernetes_cluster.aks-ep]
   name = substr("${var.customer_name}gateway", 0, min(12, length("${var.customer_name}gateway")))
   mode                  = "User"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks-ep.id
@@ -309,11 +309,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "aks-ep" {
 
 
 output "client_certificate_aksep" {
+  depends_on = [azurerm_kubernetes_cluster.aks-ep]
   value     = azurerm_kubernetes_cluster.aks-ep.kube_config.0.client_certificate
   sensitive = true
 }
 
 output "kube_config_aks_ep" {
+  depends_on = [azurerm_kubernetes_cluster.aks-ep]
   value = azurerm_kubernetes_cluster.aks-ep.kube_config_raw
 
   sensitive = true

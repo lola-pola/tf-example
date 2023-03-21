@@ -309,6 +309,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
     vm_size             = var.vm_size
     enable_auto_scaling = var.enable_auto_scaling
     tags                = var.tags_map
+    labels              = var.labels_map
   }
 
   identity {

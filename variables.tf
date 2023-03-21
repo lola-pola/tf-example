@@ -41,11 +41,9 @@ variable "subnet_address_site_prefix" {
 }
 
 
-
 variable "kubernetes_version" {
   default = "1.25.4"
   type = string
-  # default     = "1.24.6"
   description = "what version of kubernetes to use"
 }
 
