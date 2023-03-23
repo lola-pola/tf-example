@@ -60,6 +60,71 @@ resource "azurerm_subnet" "subnet_address_site" {
 
 }
 
+##security groups
+resource "azurerm_application_security_group" "sec_address_site" {
+  depends_on = [azurerm_virtual_network.vnet]
+  name                = "site"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.resource_group_location
+}
+resource "azurerm_application_security_group" "sec_address_public" {
+  depends_on = [azurerm_virtual_network.vnet]
+  name                = "public"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.resource_group_location
+}
+
+# Create NSG rules
+resource "azurerm_network_security_group" "nsg-1" {
+  depends_on = [azurerm_virtual_network.vnet]
+  name                = "nsg-1"
+  location = var.resource_group_location
+  resource_group_name = azurerm_resource_group.rg.name
+}
+resource "azurerm_network_security_group" "nsg-2" {
+  depends_on = [azurerm_virtual_network.vnet]
+  name                = "nsg-2"
+  location = var.resource_group_location
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+resource "azurerm_network_security_rule" "nsg-test-role-1" {
+  depends_on = [azurerm_virtual_network.vnet]
+  name                        = "nsg-test-role-1"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  # source_address_prefix       = "*"
+  # destination_address_prefix  = "*"
+  source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
+  destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
+  resource_group_name = azurerm_resource_group.rg.name
+  network_security_group_name = azurerm_network_security_group.nsg-1.name
+}
+
+
+resource "azurerm_network_security_rule" "nsg-test-role-2" {
+  depends_on = [azurerm_virtual_network.vnet]
+  name                        = "nsg-test-role-2"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  # source_address_prefix       = "*"
+  # destination_address_prefix  = "*"
+  source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
+  destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
+  resource_group_name = azurerm_resource_group.rg.name
+  network_security_group_name = azurerm_network_security_group.nsg-2.name
+}
+
+
+
 
 resource "azurerm_kubernetes_cluster" "aks" {
   depends_on = [azurerm_virtual_network.vnet]
@@ -129,6 +194,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "analyzer" {
   vnet_subnet_id       = azurerm_subnet.subnet_address_core.id
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map_user
+  node_labels = var.node_label
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
@@ -142,6 +208,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
   vm_size               = var.vm_size_clickhouse
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
   
 }
 
@@ -156,6 +223,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "cs" {
   vm_size               = var.vm_size_cs
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "ec" {
@@ -169,6 +237,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "ec" {
   vm_size               = var.vm_size_ec
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
@@ -182,6 +251,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
   vm_size               = var.vm_size_kafka
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "management" {
@@ -195,6 +265,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "management" {
   vm_size               = var.vm_size_management
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
 }
 
 
@@ -209,6 +280,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "pg" {
   vm_size               = var.vm_size_pg
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "site" {
@@ -222,6 +294,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "site" {
   vm_size               = var.vm_size_site
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
+
 }
 
 
@@ -304,11 +378,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "aks-ep-nodes" {
   vm_size               = var.vm_size_ep
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
+  node_labels = var.node_label
 }
 
 
 
-output "client_certificate_aksep" {
+output "client_certificate_aks_ep" {
   depends_on = [azurerm_kubernetes_cluster.aks-ep]
   value     = azurerm_kubernetes_cluster.aks-ep.kube_config.0.client_certificate
   sensitive = true

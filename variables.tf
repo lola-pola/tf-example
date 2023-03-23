@@ -4,6 +4,13 @@ variable "customer_name" {
   default = "lolas"
 }
 
+variable "node_label" {
+  type    = map(string)
+  default = {
+    "test" = "tes"
+  }
+}
+
 variable "node_resource_group" {
   type    = string
   default = "nodes-rs"
