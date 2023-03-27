@@ -8,6 +8,7 @@ variable "node_label" {
   type    = map(string)
   default = {
     "test" = "tes"
+    "test" = "test"
   }
 }
 

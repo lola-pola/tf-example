@@ -194,7 +194,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "analyzer" {
   vnet_subnet_id       = azurerm_subnet.subnet_address_core.id
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map_user
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "analyzer"}
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
@@ -208,7 +208,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "clickhouse" {
   vm_size               = var.vm_size_clickhouse
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "clickhouse"}
   
 }
 
@@ -223,7 +223,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "cs" {
   vm_size               = var.vm_size_cs
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "analyzer"}
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "ec" {
@@ -237,7 +237,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "ec" {
   vm_size               = var.vm_size_ec
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "ec"}
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
@@ -251,7 +251,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "kafka" {
   vm_size               = var.vm_size_kafka
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "kafka"}
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "management" {
@@ -265,7 +265,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "management" {
   vm_size               = var.vm_size_management
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "kafka"}
 }
 
 
@@ -280,7 +280,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "pg" {
   vm_size               = var.vm_size_pg
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "pg"}
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "site" {
@@ -294,7 +294,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "site" {
   vm_size               = var.vm_size_site
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "site"}
 
 }
 
@@ -356,6 +356,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
     vm_size             = var.vm_size
     enable_auto_scaling = var.enable_auto_scaling
     tags                = var.tags_map
+    
   }
 
   identity {
@@ -378,7 +379,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "aks-ep-nodes" {
   vm_size               = var.vm_size_ep
   enable_auto_scaling   = var.enable_auto_scaling
   tags                  = var.tags_map
-  node_labels = var.node_label
+  node_labels = {"NodeType" = "gateway"}
 }
 
 
