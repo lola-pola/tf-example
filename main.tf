@@ -86,14 +86,14 @@ resource "azurerm_application_security_group" "sec_address_public" {
 resource "azurerm_network_security_group" "nsg-1" {
   depends_on = [azurerm_resource_group.rg-ep]
   name                = "nsg-1"
-  location = azurerm_resource_group.rg-ep.name
-  resource_group_name = azurerm_resource_group.rg.name
+  location = var.resource_group_location
+  resource_group_name = azurerm_resource_group.rg-ep.name
 }
 resource "azurerm_network_security_group" "nsg-2" {
   depends_on = [azurerm_resource_group.rg-ep]
   name                = "nsg-2"
-  location = azurerm_resource_group.rg-ep.name
-  resource_group_name = azurerm_resource_group.rg.name
+  location = var.resource_group_location
+  resource_group_name = azurerm_resource_group.rg-ep.name
 }
 
 resource "azurerm_network_security_rule" "nsg-test-role-1" {
