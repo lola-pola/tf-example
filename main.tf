@@ -5,6 +5,14 @@ resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
 }
 
+resource "azurerm_resource_group" "rg-ep" {
+  name     = "${var.node_resource_group}-${var.customer_name}-ep"
+  location = var.resource_group_location
+}
+
+
+
+
 # Create a virtual network within the resource group
 resource "azurerm_virtual_network" "vnet" {
   depends_on = [azurerm_resource_group.rg]
@@ -62,13 +70,13 @@ resource "azurerm_subnet" "subnet_address_site" {
 
 ##security groups
 resource "azurerm_application_security_group" "sec_address_site" {
-  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+  depends_on = [azurerm_resource_group.rg-ep]
   name                = "site"
   resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
   location            = var.resource_group_location
 }
 resource "azurerm_application_security_group" "sec_address_public" {
-  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+  depends_on = [azurerm_resource_group.rg-ep]
   name                = "public"
   resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
   location            = var.resource_group_location
@@ -76,20 +84,20 @@ resource "azurerm_application_security_group" "sec_address_public" {
 
 # Create NSG rules
 resource "azurerm_network_security_group" "nsg-1" {
-  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+  depends_on = [azurerm_resource_group.rg-ep]
   name                = "nsg-1"
   location = "${var.node_resource_group}-${var.customer_name}-ep"
   resource_group_name = azurerm_resource_group.rg.name
 }
 resource "azurerm_network_security_group" "nsg-2" {
-  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+  depends_on = [azurerm_resource_group.rg-ep]
   name                = "nsg-2"
   location = "${var.node_resource_group}-${var.customer_name}-ep"
   resource_group_name = azurerm_resource_group.rg.name
 }
 
 resource "azurerm_network_security_rule" "nsg-test-role-1" {
-  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+  depends_on = [azurerm_resource_group.rg-ep]
   name                        = "nsg-test-role-1"
   priority                    = 100
   direction                   = "Inbound"
@@ -107,7 +115,7 @@ resource "azurerm_network_security_rule" "nsg-test-role-1" {
 
 
 resource "azurerm_network_security_rule" "nsg-test-role-2" {
-  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+  depends_on = [azurerm_resource_group.rg-ep]
   name                        = "nsg-test-role-2"
   priority                    = 100
   direction                   = "Inbound"
