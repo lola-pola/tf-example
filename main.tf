@@ -332,7 +332,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
   automatic_channel_upgrade = var.automatic_channel_upgrade 
   http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
-  node_resource_group = "${var.node_resource_group}-${var.customer_name}-ep"
+  node_resource_group = azurerm_resource_group.rg-ep.name
   
   # api_server_access_profile{
   #   enable_private_cluster = var.enable_private_cluster
