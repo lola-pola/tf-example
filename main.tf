@@ -72,13 +72,13 @@ resource "azurerm_subnet" "subnet_address_site" {
 resource "azurerm_application_security_group" "sec_address_site" {
   depends_on = [azurerm_resource_group.rg-ep]
   name                = "site"
-  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  resource_group_name = azurerm_resource_group.rg-ep.name
   location            = var.resource_group_location
 }
 resource "azurerm_application_security_group" "sec_address_public" {
   depends_on = [azurerm_resource_group.rg-ep]
   name                = "public"
-  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  resource_group_name = azurerm_resource_group.rg-ep.name
   location            = var.resource_group_location
 }
 
@@ -86,13 +86,13 @@ resource "azurerm_application_security_group" "sec_address_public" {
 resource "azurerm_network_security_group" "nsg-1" {
   depends_on = [azurerm_resource_group.rg-ep]
   name                = "nsg-1"
-  location = "${var.node_resource_group}-${var.customer_name}-ep"
+  location = azurerm_resource_group.rg-ep.name
   resource_group_name = azurerm_resource_group.rg.name
 }
 resource "azurerm_network_security_group" "nsg-2" {
   depends_on = [azurerm_resource_group.rg-ep]
   name                = "nsg-2"
-  location = "${var.node_resource_group}-${var.customer_name}-ep"
+  location = azurerm_resource_group.rg-ep.name
   resource_group_name = azurerm_resource_group.rg.name
 }
 
@@ -109,7 +109,7 @@ resource "azurerm_network_security_rule" "nsg-test-role-1" {
   # destination_address_prefix  = "*"
   source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
   destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
-  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  resource_group_name = azurerm_resource_group.rg-ep.name
   network_security_group_name = azurerm_network_security_group.nsg-1.name
 }
 
@@ -127,7 +127,7 @@ resource "azurerm_network_security_rule" "nsg-test-role-2" {
   # destination_address_prefix  = "*"
   source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
   destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
-  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  resource_group_name = azurerm_resource_group.rg-ep.name
   network_security_group_name = azurerm_network_security_group.nsg-2.name
 }
 
