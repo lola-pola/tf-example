@@ -5,12 +5,6 @@ resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
 }
 
-resource "azurerm_resource_group" "rg-ep" {
-  name     = "${var.node_resource_group}-${var.customer_name}-ep"
-  location = var.resource_group_location
-}
-
-
 
 
 # Create a virtual network within the resource group
@@ -68,68 +62,6 @@ resource "azurerm_subnet" "subnet_address_site" {
 
 }
 
-##security groups
-resource "azurerm_application_security_group" "sec_address_site" {
-  depends_on = [azurerm_resource_group.rg-ep]
-  name                = "site"
-  resource_group_name = azurerm_resource_group.rg-ep.name
-  location            = var.resource_group_location
-}
-resource "azurerm_application_security_group" "sec_address_public" {
-  depends_on = [azurerm_resource_group.rg-ep]
-  name                = "public"
-  resource_group_name = azurerm_resource_group.rg-ep.name
-  location            = var.resource_group_location
-}
-
-# Create NSG rules
-resource "azurerm_network_security_group" "nsg-1" {
-  depends_on = [azurerm_resource_group.rg-ep]
-  name                = "nsg-1"
-  location = var.resource_group_location
-  resource_group_name = azurerm_resource_group.rg-ep.name
-}
-resource "azurerm_network_security_group" "nsg-2" {
-  depends_on = [azurerm_resource_group.rg-ep]
-  name                = "nsg-2"
-  location = var.resource_group_location
-  resource_group_name = azurerm_resource_group.rg-ep.name
-}
-
-resource "azurerm_network_security_rule" "nsg-test-role-1" {
-  depends_on = [azurerm_resource_group.rg-ep]
-  name                        = "nsg-test-role-1"
-  priority                    = 100
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "*"
-  source_port_range           = "*"
-  destination_port_range      = "*"
-  # source_address_prefix       = "*"
-  # destination_address_prefix  = "*"
-  source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
-  destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
-  resource_group_name = azurerm_resource_group.rg-ep.name
-  network_security_group_name = azurerm_network_security_group.nsg-1.name
-}
-
-
-resource "azurerm_network_security_rule" "nsg-test-role-2" {
-  depends_on = [azurerm_resource_group.rg-ep]
-  name                        = "nsg-test-role-2"
-  priority                    = 100
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "*"
-  source_port_range           = "*"
-  destination_port_range      = "*"
-  # source_address_prefix       = "*"
-  # destination_address_prefix  = "*"
-  source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
-  destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
-  resource_group_name = azurerm_resource_group.rg-ep.name
-  network_security_group_name = azurerm_network_security_group.nsg-2.name
-}
 
 
 
@@ -332,7 +264,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
   automatic_channel_upgrade = var.automatic_channel_upgrade 
   http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
-  node_resource_group = azurerm_resource_group.rg-ep.name
+  node_resource_group = "${var.node_resource_group}-${var.customer_name}-ep"
   
   # api_server_access_profile{
   #   enable_private_cluster = var.enable_private_cluster
@@ -403,4 +335,67 @@ output "kube_config_aks_ep" {
   value = azurerm_kubernetes_cluster.aks-ep.kube_config_raw
 
   sensitive = true
+}
+
+##security groups
+resource "azurerm_application_security_group" "sec_address_site" {
+  depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
+  name                = "site"
+  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  location            = var.resource_group_location
+}
+resource "azurerm_application_security_group" "sec_address_public" {
+  depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
+  name                = "public"
+  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  location            = var.resource_group_location
+}
+
+# Create NSG rules
+resource "azurerm_network_security_group" "nsg-1" {
+  depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
+  name                = "nsg-1"
+  location = var.resource_group_location
+  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+}
+resource "azurerm_network_security_group" "nsg-2" {
+  depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
+  name                = "nsg-2"
+  location = var.resource_group_location
+  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+}
+
+resource "azurerm_network_security_rule" "nsg-test-role-1" {
+  depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
+  name                        = "nsg-test-role-1"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  # source_address_prefix       = "*"
+  # destination_address_prefix  = "*"
+  source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
+  destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
+  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  network_security_group_name = azurerm_network_security_group.nsg-1.name
+}
+
+
+resource "azurerm_network_security_rule" "nsg-test-role-2" {
+  depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
+  name                        = "nsg-test-role-2"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  # source_address_prefix       = "*"
+  # destination_address_prefix  = "*"
+  source_application_security_group_ids = [azurerm_application_security_group.sec_address_site.id]
+  destination_application_security_group_ids = [azurerm_application_security_group.sec_address_public.id]
+  resource_group_name = "${var.node_resource_group}-${var.customer_name}-ep"
+  network_security_group_name = azurerm_network_security_group.nsg-2.name
 }
