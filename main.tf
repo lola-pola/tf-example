@@ -99,7 +99,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin_mode = "Overlay"
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
-    network_policy = "cilium"
+    # network_policy = "cilium"
     
   }
     
@@ -287,7 +287,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
     network_plugin_mode = "Overlay"
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
-    network_policy = "cilium"
+    # network_policy = "cilium"
 
     
     
