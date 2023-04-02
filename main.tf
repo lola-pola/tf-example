@@ -90,6 +90,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     disk_driver_enabled = true
     file_driver_enabled = true
     snapshot_controller_enabled = true
+    
+
   }
 
   network_profile {
@@ -97,6 +99,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin_mode = "Overlay"
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
+    network_policy = "calico"
     
   }
     
@@ -257,7 +260,7 @@ output "kube_config" {
 resource "azurerm_kubernetes_cluster" "aks-ep" {
   depends_on = [azurerm_virtual_network.vnet]
   name                = "${var.customer_name}-ep"
-  dns_prefix          = var.customer_name
+  dns_prefix          = "${var.customer_name}-ep"
   location            = var.resource_group_location
   resource_group_name = azurerm_resource_group.rg.name
   kubernetes_version  = var.kubernetes_version
@@ -285,6 +288,8 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
     network_policy = "calico"
+
+    
     
   }
     
