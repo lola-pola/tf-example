@@ -284,6 +284,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
     network_plugin_mode = "Overlay"
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
+    network_policy = "calico"
     
   }
     
@@ -307,7 +308,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
 }
 
 
-
+## create end point cluster 
 resource "azurerm_kubernetes_cluster_node_pool" "aks-ep-nodes" {
   depends_on = [azurerm_kubernetes_cluster.aks-ep]
   name = substr("${var.customer_name}gateway", 0, min(12, length("${var.customer_name}gateway")))
@@ -337,7 +338,7 @@ output "kube_config_aks_ep" {
   sensitive = true
 }
 
-##security groups
+##security groups examples 
 resource "azurerm_application_security_group" "sec_address_site" {
   depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
   name                = "site"
