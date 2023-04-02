@@ -292,7 +292,8 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
     
     
   }
-    
+  
+  
 
   default_node_pool {
     name                = "${var.customer_name}sys"
