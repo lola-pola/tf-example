@@ -74,7 +74,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = azurerm_resource_group.rg.name
   kubernetes_version  = var.kubernetes_version
   automatic_channel_upgrade = var.automatic_channel_upgrade 
-  http_application_routing_enabled = var.http_application_routing_enabled 
+  # http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
   node_resource_group = "${var.node_resource_group}-${var.customer_name}"
 
@@ -102,7 +102,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # network_policy = "cilium"
     
   }
-    
+  key_vault_secrets_provider{
+    secret_rotation_enabled = true
+
+  }
+ 
 
   default_node_pool {
     name                = "${var.customer_name}sys"
@@ -257,6 +261,16 @@ output "kube_config" {
 }
 
 
+resource "null_resource" "aks-script" {
+  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+ provisioner "local-exec" {
+    
+    command = "chmod 777 enable-env.sh && enable-env.sh ${azurerm_resource_group.rg.name} ${azurerm_kubernetes_cluster.aks.name} '${var.resource_group_location}' ${var.kv_name}"
+
+  
+  }
+}
+
 resource "azurerm_kubernetes_cluster" "aks-ep" {
   depends_on = [azurerm_virtual_network.vnet]
   name                = "${var.customer_name}-ep"
@@ -265,7 +279,7 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
   resource_group_name = azurerm_resource_group.rg.name
   kubernetes_version  = var.kubernetes_version
   automatic_channel_upgrade = var.automatic_channel_upgrade 
-  http_application_routing_enabled = var.http_application_routing_enabled 
+  # http_application_routing_enabled = var.http_application_routing_enabled 
   sku_tier = var.sku_tier
   node_resource_group = "${var.node_resource_group}-${var.customer_name}-eps"
   
@@ -288,11 +302,11 @@ resource "azurerm_kubernetes_cluster" "aks-ep" {
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
     # network_policy = "cilium"
-
-    
-    
   }
-  
+   key_vault_secrets_provider{
+    secret_rotation_enabled = true
+
+  }
 
 
   default_node_pool {
@@ -344,6 +358,14 @@ output "kube_config_aks_ep" {
   sensitive = true
 }
 
+
+resource "null_resource" "aks-ep-script" {
+  depends_on = [azurerm_kubernetes_cluster.aks-ep]
+ provisioner "local-exec" {
+    
+    command = "chmod 777 enable-env.sh && enable-env.sh ${azurerm_resource_group.rg.name} ${azurerm_kubernetes_cluster.aks-ep.name} '${var.resource_group_location}' ${var.kv_name}"
+  }
+}
 ##security groups examples 
 resource "azurerm_application_security_group" "sec_address_site" {
   depends_on = [azurerm_kubernetes_cluster_node_pool.aks-ep-nodes]
@@ -406,3 +428,6 @@ resource "azurerm_network_security_rule" "nsg-test-role-2" {
   resource_group_name = "${var.node_resource_group}-${var.customer_name}-eps"
   network_security_group_name = azurerm_network_security_group.nsg-2.name
 }
+
+
+ 

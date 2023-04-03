@@ -99,6 +99,14 @@ variable "resource_group_location" {
   description = "Location of the resource group."
 }
 
+variable "kv_name" {
+  
+  type = string
+  description = "key vault to connect to "
+  default = "aterak8sdemo"
+
+}
+
 variable "min_count_user" {
   default = 1
 }
