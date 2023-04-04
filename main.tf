@@ -99,6 +99,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin_mode = "Overlay"
     ebpf_data_plane = "cilium"
     pod_cidr = "192.168.0.0/16"
+    service_cidr= "192.168.0.0/16"
     # network_policy = "cilium"
     
   }
@@ -265,7 +266,7 @@ resource "null_resource" "aks-script" {
   depends_on = [azurerm_kubernetes_cluster.aks-ep]
  provisioner "local-exec" {
     
-    command = "chmod 777 enable-env.sh && enable-env.sh ${azurerm_resource_group.rg.name} ${azurerm_kubernetes_cluster.aks.name} '${var.resource_group_location}' ${var.kv_name}"
+    command = "chmod 777 enable-env.sh && bash -x enable-env.sh ${azurerm_resource_group.rg.name} ${azurerm_kubernetes_cluster.aks.name} ${var.resource_group_location} ${var.kv_name}"
 
   
   }
@@ -363,7 +364,7 @@ resource "null_resource" "aks-ep-script" {
   depends_on = [azurerm_kubernetes_cluster.aks-ep]
  provisioner "local-exec" {
     
-    command = "chmod 777 enable-env.sh && enable-env.sh ${azurerm_resource_group.rg.name} ${azurerm_kubernetes_cluster.aks-ep.name} '${var.resource_group_location}' ${var.kv_name}"
+    command = "chmod 777 enable-env.sh && bash -x enable-env.sh ${azurerm_resource_group.rg.name} ${azurerm_kubernetes_cluster.aks-ep.name} ${var.resource_group_location} ${var.kv_name}"
   }
 }
 ##security groups examples 

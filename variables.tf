@@ -50,7 +50,7 @@ variable "subnet_address_site_prefix" {
 
 
 variable "kubernetes_version" {
-  default = "1.25.4"
+  default = "1.25.5"
   type = string
   description = "what version of kubernetes to use"
 }
@@ -87,14 +87,14 @@ variable "tags_map" {
   default = {
     env          = "Production",
     upgrade      = "test",
-    version      = "1.25.4",
+    version      = "1.25.5",
     last_version = "1.19.07"
     ManagedBy    = "Terraform"
   }
 }
 
 variable "resource_group_location" {
-  default     = "West Europe"
+  default     = "westeurope"
   type = string
   description = "Location of the resource group."
 }
@@ -135,7 +135,7 @@ variable "tags_map_user" {
     env          = "Production",
     nodes = "node example",
     upgrade      = "test",
-    version      = "1.25.4",
+    version      = "1.25.5",
     last_version = "1.19.07"
     ManagedBy    = "Terraform"
   }
